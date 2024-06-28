@@ -22,21 +22,34 @@
                 @php
                     $value = $message['file'];
                     $file = substr($value, 6);
+
+                    // checking file is image of video with his extention
+                    $extension = pathinfo($file, PATHINFO_EXTENSION);
+                    $isImage = in_array($extension, ['jpeg', 'png', 'jpg', 'gif']);
+                    $isVideo = in_array($extension, ['mp4', 'mov', 'avi']);
+                    
                 @endphp
 
                 @if ($message['sender'] != auth()->user()->name)
                     <div class="clearfix w-4/4">
                         <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
-                           <span> <b>{{ $message['sender'] }}: </b></span>
+                            <span> <b>{{ $message['sender'] }}: </b></span>
                             @if ($message['file'])
-                                <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
-                                    height="200px">
-                            @endif
+                                    @if ($isImage)
+                                        <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
+                                            height="200px">
+                                    @elseif($isVideo)
+                                        <video width="320" height="240" controls>
+                                            <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    @endif
+                                @endif
                             <br>
 
-                             @if ($message['message'] != "")
-                             {{ $message['message'] }}
-                             @endif
+                            @if ($message['message'] != '')
+                                {{ $message['message'] }}
+                            @endif
                         </div>
                     </div>
                 @else
@@ -44,13 +57,21 @@
                         <div class="text-right">
                             <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
                                 @if ($message['file'])
-                                    <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
-                                        height="200px">
+                                    @if ($isImage)
+                                        <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
+                                            height="200px">
+                                    @elseif($isVideo)
+                                        <video width="320" height="240" controls>
+                                            <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    @endif
                                 @endif
 
-                                @if ($message['message'] != "")
-                                {{ $message['message'] }}
-                                @endif<b> :you</b>
+                                @if ($message['message'] != '')
+                                    {{ $message['message'] }}
+                                @endif
+                                <b> :you</b>
                             </p>
                         </div>
                     </div>
