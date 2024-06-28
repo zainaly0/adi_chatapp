@@ -38,6 +38,7 @@ class ChatComponent extends Component
             $this->appendChatMessage($message);
         }
 
+        // dd($this->messages);
     }
 
     public function sendMessage(){
