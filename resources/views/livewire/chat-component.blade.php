@@ -69,7 +69,7 @@
                                             Your browser does not support the video tag.
                                         </video>
                                         @elseif($isPdf)
-                                        <video class="pdf" src="{{ asset('storage/'. $file)}}" width="200px" height="100px"></video>
+                                        <embed class="pdf" src="{{ asset('storage/'. $file)}}" width="200px" height="100px"></embed>
                                     @endif
                                 @endif
 
