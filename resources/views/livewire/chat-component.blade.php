@@ -1,6 +1,6 @@
 <div>
     <div style="overscroll-behavior: none;">
-        <div class="fixed w-full bg-green-400 h-16 pt-2 text-white flex justify-between shadow-md"
+        <div class="fixed w-full bg-green-400 h-16 pt-2 text-white flex justify-between shadow-md  z-10"
             style="top:0px; overscroll-behavior: none;">
             <!-- back button -->
             <a href="/dashboard">
@@ -21,12 +21,13 @@
             @foreach ($messages as $message)
                 @php
                     $value = $message['file'];
-                    $file = substr($value, 6);
+                    $file = substr($value, 7);
 
                     // checking file is image of video with his extention
                     $extension = pathinfo($file, PATHINFO_EXTENSION);
                     $isImage = in_array($extension, ['jpeg', 'png', 'jpg', 'gif']);
                     $isVideo = in_array($extension, ['mp4', 'mov', 'avi']);
+                    $isPdf = in_array($extension, ['pdf']);
                     
                 @endphp
 
@@ -39,10 +40,12 @@
                                         <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
                                             height="200px">
                                     @elseif($isVideo)
-                                        <video width="320" height="240" controls>
+                                        <video width="260" height="180" controls style="z-index: 0">
                                             <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
+                                    @elseif($isPdf)
+                                    <a href="{{ asset('storage/'. $file)}}" download>download pdf</a>
                                     @endif
                                 @endif
                             <br>
@@ -65,6 +68,8 @@
                                             <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
+                                        @elseif($isPdf)
+                                        <video class="pdf" src="{{ asset('storage/'. $file)}}" width="200px" height="100px"></video>
                                     @endif
                                 @endif
 
