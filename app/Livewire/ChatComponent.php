@@ -6,11 +6,14 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Message;
 use App\Events\MessageSentEvent;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ChatComponent extends Component
 {
+    use WithFileUploads;
     public $user;
     public $sender_id;
     public $receiver_id;
@@ -45,33 +48,37 @@ class ChatComponent extends Component
         $this->user = User::where('id', $user_id)->first();
     }
 
-    public function sendMessage()
-    {
+    public function sendMessage() {
         $validator = Validator::make(['message' => $this->message, 'file' => $this->file], [
-            'message' => ['nullable', 'min:1', 'no_blank_spaces'],
-            'file' => ['nullable', 'mimes:jpeg, png, jpg, gif, mp3, wav, mp4, avi, doc, docx, pdf', 'max:10240']
+            'message' => ['nullable', 'min:1'],
+            'file' => ['nullable', 'mimes:jpeg,png,jpg,gif,mp3,wav,mp4,avi,doc,docx,pdf', 'max:10240']
         ]);
         if ($validator->fails()) {
             return;
         }
 
-
-        $chatMessage = new Message();
-        $chatMessage->sender_id = $this->sender_id;
-        $chatMessage->receiver_id = $this->receiver_id;
-        $chatMessage->message = $this->message;
-
-        if ($this->file) {
-            $filename = time() . "_" . $this->file->getClientOriginalName();
-            $filePath = $this->file->store('photos');
-            $chatMessage->file = $filePath;
+        try{
+            $chatMessage = new Message();
+            $chatMessage->sender_id = $this->sender_id;
+            $chatMessage->receiver_id = $this->receiver_id;
+            $chatMessage->message = $this->message;
+    
+            if ($this->file != "") {    
+                $filename = time() . "_" . $this->file->getClientOriginalName();
+                $filePath = $this->file->storeAs('photos', $filename);   // iss path main image store ho jayegi
+                $chatMessage->file = $filePath;
+            }
+            $chatMessage->save();
+    
+            $this->appendChatMessage($chatMessage);
+            broadcast(new MessageSentEvent($chatMessage))->toOthers();
+    
+            $this->message = '';
+            $this->file = null;
+        }catch(\Exception $e){
+            Log::error('error saving message', ['error' => $e->getMessage()]);
         }
-        $chatMessage->save();
-
-        $this->appendChatMessage($chatMessage);
-        broadcast(new MessageSentEvent($chatMessage))->toOthers();
-
-        $this->message = '';
+       
     }
 
     #[On('echo-private:chat-channel.{sender_id},MessageSentEvent')]
@@ -91,6 +98,7 @@ class ChatComponent extends Component
             'message' => $message->message,
             'sender' => $message->sender->name,
             'receiver' => $message->receiver->name,
+            'file' => $message->file,
         ];
     }
 }
