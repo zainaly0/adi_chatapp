@@ -22,6 +22,10 @@
                 @if ($message['sender'] != auth()->user()->name)
                     <div class="clearfix w-4/4">
                         <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                            {{-- @if ($message['file'])
+                                <img src="{{ asset('storage/' . $message['file']) }}" alt="Image" width="100px"
+                                    height="100px">
+                            @endif --}}
                             <b>{{ $message['sender'] }}: </b> {{ $message['message'] }}
                         </div>
                     </div>
@@ -29,6 +33,10 @@
                     <div class="clearfix w-4/4">
                         <div class="text-right">
                             <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                                {{-- @if ($message['file'])
+                                    <img src="{{ asset('storage/' . $message['file']) }}" alt="Image" width="100px"
+                                        height="100px">
+                                @endif --}}
                                 {{ $message['message'] }}<b> :you</b>
                             </p>
                         </div>
