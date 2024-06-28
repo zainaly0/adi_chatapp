@@ -22,7 +22,7 @@
                 @if ($message['sender'] != auth()->user()->name)
                     <div class="clearfix w-4/4">
                         <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
-                            <b>{{$message['sender']}}: </b>    {{ $message['message'] }}
+                            <b>{{ $message['sender'] }}: </b> {{ $message['message'] }}
                         </div>
                     </div>
                 @else
@@ -38,8 +38,10 @@
         </div>
     </div>
 
-    <form wire:submit="sendMessage()">
+    <form wire:submit="sendMessage()" enctype="multipart/form-data">
         <div class="fixed w-full flex justify-between bg-green-100" style="bottom: 0px;">
+            <input type="file" name="file" wire:model="file" id="file"
+                accept=".jpg, .jpeg, .png, .gif, .mp3, .wav, .mp4, .mkv, .avi, .doc, .docx, .pdf">
             <textarea class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none"
                 rows="1" wire:model="message" placeholder="Message..." style="outline: none;"></textarea>
             <button class="m-2" type="submit" style="outline: none;">
@@ -53,3 +55,13 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $("#fileSend_button").click(function() {
+
+            });
+        });
+    </script>
+@endpush
