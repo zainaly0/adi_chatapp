@@ -50,7 +50,7 @@ class ChatComponent extends Component
 
     public function sendMessage() {
         $validator = Validator::make(['message' => $this->message, 'file' => $this->file], [
-            'message' => ['nullable', 'min:1'],
+            'message' => ['nullable'],
             'file' => ['nullable', 'mimes:jpeg,png,jpg,gif,mp3,wav,mp4,avi,doc,docx,pdf', 'max:10240']
         ]);
         if ($validator->fails()) {
@@ -65,8 +65,9 @@ class ChatComponent extends Component
     
             if ($this->file != "") {    
                 $filename = time() . "_" . $this->file->getClientOriginalName();
-                $filePath = $this->file->storeAs('photos', $filename);   // iss path main image store ho jayegi
+                $filePath = $this->file->storeAs('public/files', $filename);   // iss path main image store ho jayegi
                 $chatMessage->file = $filePath;
+                $chatMessage->save();
             }
             $chatMessage->save();
     
@@ -93,6 +94,8 @@ class ChatComponent extends Component
 
     public function appendChatMessage($message)
     {
+
+
         $this->messages[] = [
             'id' => $message->id,
             'message' => $message->message,

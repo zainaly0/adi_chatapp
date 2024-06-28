@@ -19,21 +19,38 @@
 
         <div class="mt-20 mb-16">
             @foreach ($messages as $message)
+                @php
+                    $value = $message['file'];
+                    $file = substr($value, 6);
+                @endphp
+
                 @if ($message['sender'] != auth()->user()->name)
                     <div class="clearfix w-4/4">
                         <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                           <span> <b>{{ $message['sender'] }}: </b></span>
                             @if ($message['file'])
-                            <img src="{{ Storage::url($message['file']) }}" alt="Image" width="100px" height="100px">
+                                <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
+                                    height="200px">
                             @endif
-                            <b>{{ $message['sender'] }}: </b> {{ $message['message'] }}
+                            <br>
+
+                             @if ($message['message'] != "")
+                             {{ $message['message'] }}
+                             @endif
                         </div>
                     </div>
                 @else
                     <div class="clearfix w-4/4">
                         <div class="text-right">
                             <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
-                                <img src="{{ Storage::url($message['file']) }}" alt="Image" width="100px" height="100px">
-                                {{ $message['message'] }}<b> :you</b>
+                                @if ($message['file'])
+                                    <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
+                                        height="200px">
+                                @endif
+
+                                @if ($message['message'] != "")
+                                {{ $message['message'] }}
+                                @endif<b> :you</b>
                             </p>
                         </div>
                     </div>
