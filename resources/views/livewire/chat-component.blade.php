@@ -1,6 +1,6 @@
 <div>
     <div style="overscroll-behavior: none;">
-        <div class="fixed w-full bg-green-400 h-16 pt-2 text-white flex justify-between shadow-md  z-10"
+        <div class="fixed w-full bg-green-500 h-16 pt-2 text-white flex justify-between shadow-md  z-10"
             style="top:0px; overscroll-behavior: none;">
             <!-- back button -->
             <a href="/dashboard">
@@ -28,7 +28,7 @@
                     $isImage = in_array($extension, ['jpeg', 'png', 'jpg', 'gif']);
                     $isVideo = in_array($extension, ['mp4', 'mov', 'avi']);
                     $isPdf = in_array($extension, ['pdf']);
-                    
+
                 @endphp
 
                 @if ($message['sender'] != auth()->user()->name)
@@ -36,18 +36,19 @@
                         <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
                             <span> <b>{{ $message['sender'] }}: </b></span>
                             @if ($message['file'])
-                                    @if ($isImage)
-                                        <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
-                                            height="200px">
-                                    @elseif($isVideo)
-                                        <video width="260" height="180" controls style="z-index: 0">
-                                            <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    @elseif($isPdf)
-                                    <a href="{{ asset('storage/'. $file)}}" download>download pdf</a>
-                                    @endif
+                                @if ($isImage)
+                                    <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
+                                        height="200px">
+                                @elseif($isVideo)
+                                    <video width="260" height="180" controls>
+                                        <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @elseif($isPdf)
+                                    <embed class="pdf" src="{{ asset('storage/' . $file) }}" width="200px"
+                                        height="100px"></embed>
                                 @endif
+                            @endif
                             <br>
 
                             @if ($message['message'] != '')
@@ -64,12 +65,13 @@
                                         <img src="{{ asset('storage/' . $file) }}" alt="Image" width="200px"
                                             height="200px">
                                     @elseif($isVideo)
-                                        <video width="320" height="240" controls>
+                                        <video width="260" height="180" controls>
                                             <source src="{{ asset('storage/' . $file) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
-                                        @elseif($isPdf)
-                                        <embed class="pdf" src="{{ asset('storage/'. $file)}}" width="200px" height="100px"></embed>
+                                    @elseif($isPdf)
+                                        <embed class="pdf" src="{{ asset('storage/' . $file) }}" width="200px"
+                                            height="100px"></embed>
                                     @endif
                                 @endif
 
