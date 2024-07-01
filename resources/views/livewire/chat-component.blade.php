@@ -51,9 +51,9 @@
                             @endif
                             <br>
 
-                            @if ($message['message'] != '')
-                                {{ $message['message'] }}
-                            @endif
+                            @if (trim($message['message']) != '')
+                                    {{ $message['message'] }}
+                                @endif
                         </div>
                     </div>
                 @else
@@ -75,7 +75,7 @@
                                     @endif
                                 @endif
 
-                                @if ($message['message'] != '')
+                                @if (trim($message['message']) != '')
                                     {{ $message['message'] }}
                                 @endif
                                 <b> :you</b>
@@ -89,7 +89,7 @@
 
     <form wire:submit="sendMessage()" enctype="multipart/form-data">
         <div class="fixed w-full flex justify-between bg-green-100" style="bottom: 0px;">
-            <input type="file" name="file" wire:model="file" id="file"
+            <input class="" type="file"  name="file" wire:model="file" id="file"
                 accept=".jpg, .jpeg, .png, .gif, .mp3, .wav, .mp4, .mkv, .avi, .doc, .docx, .pdf">
             <textarea class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none"
                 rows="1" wire:model="message" placeholder="Message..." style="outline: none;"></textarea>

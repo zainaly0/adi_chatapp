@@ -48,38 +48,39 @@ class ChatComponent extends Component
         $this->user = User::where('id', $user_id)->first();
     }
 
-    public function sendMessage() {
+    public function sendMessage()
+    {
         $validator = Validator::make(['message' => $this->message, 'file' => $this->file], [
-            'message' => ['nullable'],
+            'message' => ['nullable', 'regex:/^[a-zA-Z0-9\s]+$/'],
             'file' => ['nullable', 'mimes:jpeg,png,jpg,gif,mp3,wav,mp4,avi,doc,docx,pdf', 'max:10240']
+        ], [
+            'message.regex' => 'special characters is not accept',
         ]);
         if ($validator->fails()) {
             return;
         }
 
-        try{
+        try {
             $chatMessage = new Message();
             $chatMessage->sender_id = $this->sender_id;
             $chatMessage->receiver_id = $this->receiver_id;
             $chatMessage->message = $this->message;
-    
-            if ($this->file != "") {    
+            if ($this->file != "") {
                 $filename = time() . "_" . $this->file->getClientOriginalName();
                 $filePath = $this->file->storeAs('public/files', $filename);   // iss path main image store ho jayegi
                 $chatMessage->file = $filePath;
                 $chatMessage->save();
             }
             $chatMessage->save();
-    
+
             $this->appendChatMessage($chatMessage);
             broadcast(new MessageSentEvent($chatMessage))->toOthers();
-    
+
             $this->message = '';
             $this->file = null;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::error('error saving message', ['error' => $e->getMessage()]);
         }
-       
     }
 
     #[On('echo-private:chat-channel.{sender_id},MessageSentEvent')]
