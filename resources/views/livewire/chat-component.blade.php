@@ -87,19 +87,28 @@
         </div>
     </div>
 
-    <form wire:submit="sendMessage()" enctype="multipart/form-data">
+    <form enctype="multipart/form-data">
         <div class="fixed w-full flex justify-between bg-green-100" style="bottom: 0px;">
             <input class="" type="file" name="file" wire:model="file" id="file"
                 accept=".jpg, .jpeg, .png, .gif, .mp3, .wav, .mp4, .mkv, .avi, .doc, .docx, .pdf">
-            <textarea id="result"
+            <textarea id="result" onkeyup="textvaluefun(event)"
                 class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none" rows="1"
                 wire:model="message" placeholder="Message..." style="outline: none;"></textarea>
-            <button id="start-recognition" class="m-2" type="submit" style="outline: none;">
-                <svg class="svg-inline--fa text-green-400 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2" aria-hidden="true"
-                    focusable="false" data-prefix="fas" data-icon="paper-plane" role="img"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path fill="currentColor"
-                        d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z" />
+            <button id="start-recognition" class="m-2" style="outline: none;">
+                <svg class="svg-inline--fa text-green-400 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                    width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+                    <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                        transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+                        <path
+                            d="M 45 0 c -8.481 0 -15.382 6.9 -15.382 15.382 v 29.044 c 0 8.482 6.9 15.382 15.382 15.382 s 15.382 -6.9 15.382 -15.382 V 15.382 C 60.382 6.9 53.481 0 45 0 z"
+                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,157,51); fill-rule: nonzero; opacity: 1;"
+                            transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                        <path
+                            d="M 69.245 38.312 c -1.104 0 -2 0.896 -2 2 v 6.505 c 0 12.266 -9.979 22.244 -22.245 22.244 s -22.245 -9.979 -22.245 -22.244 v -6.505 c 0 -1.104 -0.896 -2 -2 -2 s -2 0.896 -2 2 v 6.505 c 0 13.797 10.705 25.134 24.245 26.16 V 86 h -9.126 c -1.104 0 -2 0.896 -2 2 s 0.896 2 2 2 h 22.252 c 1.104 0 2 -0.896 2 -2 s -0.896 -2 -2 -2 H 47 V 72.978 c 13.54 -1.026 24.245 -12.363 24.245 -26.16 v -6.505 C 71.245 39.208 70.35 38.312 69.245 38.312 z"
+                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,157,51); fill-rule: nonzero; opacity: 1;"
+                            transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                    </g>
                 </svg>
             </button>
         </div>
@@ -111,15 +120,41 @@
         const startButton = document.getElementById('start-recognition');
         const resultElement = document.getElementById('result');
 
+        function textvaluefun(e) {
+            if (e.target.value.length >= 1) {
+                startButton.innerHTML = `
+                    <span><svg class='svg-inline--fa text-green-400 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2' aria-hidden='true' focusable='false' data-prefix='fas' data-icon='paper-plane' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                        <path fill='currentColor' d='M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z'/>
+                    </svg></span>
+                `;
+            } else {
+                startButton.innerHTML = `<span><svg class="svg-inline--fa text-green-400 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                    width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+                    <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                        transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+                        <path
+                            d="M 45 0 c -8.481 0 -15.382 6.9 -15.382 15.382 v 29.044 c 0 8.482 6.9 15.382 15.382 15.382 s 15.382 -6.9 15.382 -15.382 V 15.382 C 60.382 6.9 53.481 0 45 0 z"
+                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,157,51); fill-rule: nonzero; opacity: 1;"
+                            transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                        <path
+                            d="M 69.245 38.312 c -1.104 0 -2 0.896 -2 2 v 6.505 c 0 12.266 -9.979 22.244 -22.245 22.244 s -22.245 -9.979 -22.245 -22.244 v -6.505 c 0 -1.104 -0.896 -2 -2 -2 s -2 0.896 -2 2 v 6.505 c 0 13.797 10.705 25.134 24.245 26.16 V 86 h -9.126 c -1.104 0 -2 0.896 -2 2 s 0.896 2 2 2 h 22.252 c 1.104 0 2 -0.896 2 -2 s -0.896 -2 -2 -2 H 47 V 72.978 c 13.54 -1.026 24.245 -12.363 24.245 -26.16 v -6.505 C 71.245 39.208 70.35 38.312 69.245 38.312 z"
+                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,157,51); fill-rule: nonzero; opacity: 1;"
+                            transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                    </g>
+                </svg></span>`;
+            }
+        }
+
+
 
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
-
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = 'hi-IN';
+            recognition.lang = 'en-IN';
 
             recognition.onstart = () => {
                 resultElement.innerText = 'Listening...';
