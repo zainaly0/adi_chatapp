@@ -52,8 +52,8 @@
                             <br>
 
                             @if (trim($message['message']) != '')
-                                    {{ $message['message'] }}
-                                @endif
+                                {{ $message['message'] }}
+                            @endif
                         </div>
                     </div>
                 @else
@@ -89,11 +89,12 @@
 
     <form wire:submit="sendMessage()" enctype="multipart/form-data">
         <div class="fixed w-full flex justify-between bg-green-100" style="bottom: 0px;">
-            <input class="" type="file"  name="file" wire:model="file" id="file"
+            <input class="" type="file" name="file" wire:model="file" id="file"
                 accept=".jpg, .jpeg, .png, .gif, .mp3, .wav, .mp4, .mkv, .avi, .doc, .docx, .pdf">
-            <textarea class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none"
-                rows="1" wire:model="message" placeholder="Message..." style="outline: none;"></textarea>
-            <button class="m-2" type="submit" style="outline: none;">
+            <textarea id="result"
+                class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none" rows="1"
+                wire:model="message" placeholder="Message..." style="outline: none;"></textarea>
+            <button id="start-recognition" class="m-2" type="submit" style="outline: none;">
                 <svg class="svg-inline--fa text-green-400 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2" aria-hidden="true"
                     focusable="false" data-prefix="fas" data-icon="paper-plane" role="img"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -107,10 +108,41 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $("#fileSend_button").click(function() {
+        const startButton = document.getElementById('start-recognition');
+        const resultElement = document.getElementById('result');
 
+
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'hi-IN';
+
+            recognition.onstart = () => {
+                resultElement.innerText = 'Listening...';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                resultElement.innerText = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                resultElement.innerText = 'Error occurred: ' + event.error;
+            };
+
+            recognition.onend = () => {
+                resultElement.innerText += ' (End of recognition)';
+            };
+
+            startButton.addEventListener('click', () => {
+                recognition.start();
             });
-        });
+        } else {
+            resultElement.innerText = 'Speech recognition not supported in this browser.';
+        }
     </script>
 @endpush
