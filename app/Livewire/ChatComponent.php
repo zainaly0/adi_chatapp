@@ -51,7 +51,8 @@ class ChatComponent extends Component
     public function sendMessage()
     {
         $validator = Validator::make(['message' => $this->message, 'file' => $this->file], [
-            'message' => ['nullable', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            // 'message' => ['nullable', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'message' => ['nullable'],
             'file' => ['nullable', 'mimes:jpeg,png,jpg,gif,mp3,wav,mp4,avi,doc,docx,pdf', 'max:10240']
         ], [
             'message.regex' => 'special characters is not accept',
