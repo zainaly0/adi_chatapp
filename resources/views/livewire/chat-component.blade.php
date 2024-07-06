@@ -124,33 +124,24 @@
 </div>
 
 @push('scripts')
-    <script>
-        const startButton = document.getElementById('start-recognition');
-        const resultElement = document.getElementById('result');
+<script>
+    const startButton = document.getElementById('start-recognition');
+    const resultElement = document.getElementById('result');
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'hi-IN';
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'hi-IN';
 
-            recognition.onstart = () => {
-                resultElement.innerText = 'Listening...';
-            };
+        recognition.onstart = () => {
+            resultElement.innerText = 'Listening...';
+        };
 
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                console.log(transcript)
-                // resultElement.innerText = transcript;
-                resultElement.value = resultElement.innerText;
-                // console.log(resultElement.value)
-
-
-                resultElement.innerText = transcript; // Set innerText to the transcript
-                // resultElement.value = resultElement.innerText; // Set value to innerText
-            };
-
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            resultElement.value = transcript; // Set innerText to the transcript
         };
 
         recognition.onerror = (event) => {
@@ -165,9 +156,9 @@
             recognition.start();
         });
 
-        }
-        else {
-            resultElement.innerText = 'Speech recognition not supported in this browser.';
-        }
-    </script>
+    } else {
+        resultElement.innerText = 'Speech recognition not supported in this browser.';
+    }
+</script>
+
 @endpush
